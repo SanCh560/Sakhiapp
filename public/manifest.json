@@ -1,0 +1,21 @@
+{
+  "name": "Sakhi - AI Solo Female Travel Companion",
+  "short_name": "Sakhi Travel",
+  "description": "Mobile-first AI travel companion for solo female travellers with offline safe routes, match scores & emergency hub.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#e07a5f",
+  "icons": [
+    {
+      "src": "https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=192&h=192&q=80",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=512&h=512&q=80",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

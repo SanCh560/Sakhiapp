@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #f8f6fd;
+    color: #0f172a;
+    -webkit-tap-highlight-color: transparent;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', 'Inter', sans-serif;
+  }
+}
+
+/* Sakhi Signature Royal Purple Design Tokens */
+:root {
+  --sakhi-primary: #7c3aed;
+  --sakhi-primary-hover: #6d28d9;
+  --sakhi-primary-dark: #5b21b6;
+  --sakhi-light: #f5f3ff;
+  --sakhi-subtle: #ede9fe;
+  --aura-primary: #7c3aed;
+  --aura-primary-hover: #6d28d9;
+  --aura-primary-dark: #5b21b6;
+  --aura-light: #f5f3ff;
+  --aura-subtle: #ede9fe;
+}
+
+.bg-hw-coral {
+  background-color: #7c3aed;
+}
+
+.bg-hw-coral-gradient {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+}
+
+.bg-hw-light-coral {
+  background-color: #f5f3ff;
+}
+
+.text-hw-coral {
+  color: #7c3aed;
+}
+
+.border-hw-coral {
+  border-color: #7c3aed;
+}
+
+/* Custom scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Leaflet Map Custom Marker Styling */
+.custom-leaflet-icon {
+  background: transparent;
+  border: none;
+}
