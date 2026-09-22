@@ -10,7 +10,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "desktop": "electron .",
-    "eval": "node src/eval/runEvaluation.js"
+    "eval": "node src/eval/runEvaluation.js",
+    "keep-alive": "node scripts/keep-alive.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.2",
