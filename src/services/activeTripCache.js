@@ -53,10 +53,10 @@ class ActiveTripCacheManager {
           if (tripData) activeTrip = tripData;
         }
 
-        // 2. Fetch Booked Accommodation from Supabase if not provided
-        if (!bookedAccommodation) {
+        // 2. Fetch Booked Accommodation from Supabase if confirmed
+        if (!bookedAccommodation && activeTrip?.stayConfirmed && activeTrip?.bookedStayName) {
           const { data: accData } = await supabase.from('accommodations').select('*').eq('destination_id', destId);
-          if (accData) bookedAccommodation = accData[0] || null;
+          if (accData) bookedAccommodation = accData.find(a => a.name === activeTrip.bookedStayName) || null;
         }
 
         // 3. Fetch Places of Interest for current destination
@@ -84,19 +84,30 @@ class ActiveTripCacheManager {
       tripId,
       destId,
       activeTrip: activeTrip || db.selectById('trips', tripId) || { id: tripId, destinationId: destId },
-      flight: {
-        flightNumber: activeTrip?.flightNumber || 'Direct Flight',
-        destinationAirport: activeTrip?.destinationAirport || `${cityName} Airport`,
-        arrivalTime: activeTrip?.arrivalTime || '14:00',
-        departureTime: activeTrip?.departureTime || '09:00',
-        airline: activeTrip?.airline || 'Scheduled Carrier',
-        isConfirmed: !!activeTrip?.flightConfirmed || activeTrip?.tripStatus === 'already-booked'
-      },
-      bookedAccommodation: bookedAccommodation || (activeTrip?.bookedStayName ? {
+      flight: activeTrip?.flightConfirmed ? {
+        flightNumber: activeTrip.flightNumber || 'Direct Flight',
+        destinationAirport: activeTrip.destinationAirport || `${cityName} Airport`,
+        arrivalTime: activeTrip.arrivalTime || '14:00',
+        departureTime: activeTrip.departureTime || '09:00',
+        airline: activeTrip.airline || 'Scheduled Carrier',
+        isConfirmed: true
+      } : (activeTrip?.flightNumber ? {
+        flightNumber: activeTrip.flightNumber,
+        destinationAirport: activeTrip.destinationAirport || `${cityName} Airport`,
+        arrivalTime: activeTrip.arrivalTime || '14:00',
+        departureTime: activeTrip.departureTime || '09:00',
+        airline: activeTrip.airline || 'Scheduled Carrier',
+        isConfirmed: false
+      } : null),
+      bookedAccommodation: bookedAccommodation || (activeTrip?.stayConfirmed && activeTrip?.bookedStayName ? {
         name: activeTrip.bookedStayName,
-        address: activeTrip.stayAddress,
+        address: activeTrip.stayAddress || `${cityName} City Center`,
         type: 'Confirmed Stay'
-      } : db.getTable('accommodations')[0]),
+      } : (activeTrip?.bookedStayName ? {
+        name: activeTrip.bookedStayName,
+        address: activeTrip.stayAddress || `${cityName} City Center`,
+        type: 'Pending Selection'
+      } : null)),
       offlineMaps: {
         version: 'v2026.1',
         cachedVectorMap: true,

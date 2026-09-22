@@ -87,11 +87,13 @@ export default function ArrivalModePhase({
   const [selectedTransport, setSelectedTransport] = useState(scoredRoutes[0] || null);
   const [playingAudioId, setPlayingAudioId] = useState(null);
 
-  const bookedStayName = tripConfig?.bookedStayName || (destinationData?.accommodations?.[0]?.name || `${destinationData?.cityName || 'City'} Stay`);
+  const isStayConfirmed = Boolean(tripConfig?.stayConfirmed && tripConfig?.bookedStayName);
+  const isFlightConfirmed = Boolean(tripConfig?.flightConfirmed && tripConfig?.flightNumber);
+  const bookedStayName = isStayConfirmed ? tripConfig.bookedStayName : `${cityName} Central Area`;
   const durationDays = tripConfig?.durationDays || 5;
 
   const airportOrigin = tripConfig?.destinationAirport || `${cityName} Airport`;
-  const stayDestination = `${bookedStayName}, ${cityName}`;
+  const stayDestination = isStayConfirmed ? `${bookedStayName}, ${cityName}` : `${cityName} Central Station, ${cityName}`;
   const googleMapsTransitUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(airportOrigin)}&destination=${encodeURIComponent(stayDestination)}&travelmode=transit`;
   const googleMapsDrivingUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(airportOrigin)}&destination=${encodeURIComponent(stayDestination)}&travelmode=driving`;
   const googleMapsWalkingUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(airportOrigin)}&destination=${encodeURIComponent(stayDestination)}&travelmode=walking`;
@@ -168,7 +170,9 @@ export default function ArrivalModePhase({
               {destinationData.cityName} Airport → {bookedStayName}
             </h2>
             <p className="text-xs text-violet-100 font-medium max-w-md">
-              Zero internet needed. Verified safe route to <strong>{bookedStayName}</strong> pre-cached for your {durationDays}-day stay.
+              {isStayConfirmed
+                ? `Zero internet needed. Verified safe route to ${bookedStayName} pre-cached for your ${durationDays}-day stay.`
+                : `Zero internet needed. Verified safe transit corridor to ${cityName} Central Hub pre-cached for your ${durationDays}-day stay.`}
             </p>
           </div>
         </div>
@@ -177,32 +181,41 @@ export default function ArrivalModePhase({
       {/* Synchronized Confirmed Flight & Accommodation Corridor Banner */}
       <div className="p-4 rounded-3xl bg-white border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-3">
-          <span className="p-2.5 rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 font-bold shrink-0">
+          <span className={`p-2.5 rounded-2xl ${isFlightConfirmed ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-slate-100 text-slate-500 border-slate-200'} border font-bold shrink-0`}>
             <Plane className="w-4 h-4" />
           </span>
           <div>
             <div className="font-extrabold text-slate-900 flex items-center gap-1.5">
-              <span>Flight {tripConfig?.flightNumber || 'Direct Flight'}</span>
-              <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">
-                ✓ Confirmed
+              <span>{isFlightConfirmed ? `Flight ${tripConfig.flightNumber}` : 'Flight Pending'}</span>
+              <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                isFlightConfirmed ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+              }`}>
+                {isFlightConfirmed ? '✓ Confirmed' : 'Not Confirmed'}
               </span>
             </div>
             <span className="text-[11px] text-slate-500 font-medium">
-              Lands {tripConfig?.arrivalTime || '14:00'} at {tripConfig?.destinationAirport || `${destinationData.cityName} Airport`}
+              {isFlightConfirmed
+                ? `Lands ${tripConfig?.arrivalTime || '14:00'} at ${airportOrigin}`
+                : `Corridor to ${airportOrigin}`}
             </span>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="p-2.5 rounded-2xl bg-violet-50 text-violet-600 border border-violet-100 font-bold shrink-0">
+          <span className={`p-2.5 rounded-2xl ${isStayConfirmed ? 'bg-violet-50 text-violet-600 border-violet-100' : 'bg-slate-100 text-slate-500 border-slate-200'} border font-bold shrink-0`}>
             <Hotel className="w-4 h-4" />
           </span>
           <div>
-            <div className="font-extrabold text-slate-900">
-              {bookedStayName}
+            <div className="font-extrabold text-slate-900 flex items-center gap-1.5">
+              <span>{bookedStayName}</span>
+              <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                isStayConfirmed ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+              }`}>
+                {isStayConfirmed ? '✓ Confirmed' : 'Pending Selection'}
+              </span>
             </div>
             <span className="text-[11px] text-slate-500 font-medium">
-              {tripConfig?.stayAddress || `${destinationData.cityName} City Center`}
+              {isStayConfirmed ? (tripConfig?.stayAddress || `${destinationData.cityName} City Center`) : `Routing to ${cityName} Central Hub`}
             </span>
           </div>
         </div>
@@ -239,7 +252,7 @@ export default function ArrivalModePhase({
           </p>
           <div className="flex items-center justify-between pt-1">
             <div className="text-[11px] text-slate-500 font-medium">
-              Accommodation: <strong>{bookedStayName}</strong>
+              Accommodation: <strong>{bookedStayName}</strong> {isStayConfirmed ? '(Confirmed)' : '(Pending Selection)'}
             </div>
             {tripConfig?.planStatus !== 'accepted' ? (
               <button

@@ -40,15 +40,8 @@ export const AccommodationService = {
     userCustomInstructions = '',
     forceRefresh = false
   }) {
-    // 1. Check Trip State: If accommodation is ALREADY booked, do NOT recommend again!
-    if (tripConfig?.tripStatus === 'already-booked' && tripConfig?.bookedStayName) {
-      return {
-        isAlreadyBooked: true,
-        bookedStayName: tripConfig.bookedStayName,
-        recommendations: [],
-        advisoryMessage: `Accommodation already booked (${tripConfig.bookedStayName}). Proceed to Itinerary Preparation & Arrival Mode!`
-      };
-    }
+    // 1. Check Trip State
+    const hasConfirmedStay = Boolean(tripConfig?.stayConfirmed && tripConfig?.bookedStayName);
 
     const cityName = destinationData?.cityName || 'your destination';
     const countryName = destinationData?.country || '';
@@ -194,7 +187,8 @@ export const AccommodationService = {
     });
 
     return {
-      isAlreadyBooked: false,
+      isAlreadyBooked: hasConfirmedStay,
+      bookedStayName: tripConfig?.bookedStayName || '',
       recommendations: rankedRecommendations,
       contextPayload,
       advisoryMessage: `AI Match complete for ${cityName}. Ranked ${rankedRecommendations.length} real stays matching your $${travellerContext.budgetLimit} budget limit and active instructions.`

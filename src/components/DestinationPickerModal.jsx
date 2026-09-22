@@ -96,11 +96,6 @@ export default function DestinationPickerModal({
     
     setSelectedDestId(destId);
     setSearchQuery(`${item.cityName}, ${item.country}`);
-    if (selectedStatus === 'already-booked') {
-      setBookedStayName(`${item.cityName} Solo Female Hotel & Hostel`);
-    } else {
-      setBookedStayName('');
-    }
     setIsDropdownOpen(false);
   };
 
@@ -114,11 +109,6 @@ export default function DestinationPickerModal({
 
     setSelectedDestId(destId);
     setSearchQuery(cleanName);
-    if (selectedStatus === 'already-booked') {
-      setBookedStayName(`${cleanName} Hotel & Hostel`);
-    } else {
-      setBookedStayName('');
-    }
     setIsDropdownOpen(false);
   };
 
@@ -160,23 +150,30 @@ export default function DestinationPickerModal({
     }
 
     const isAlreadyBookedStatus = selectedStatus === 'already-booked';
-    const finalStayName = isAlreadyBookedStatus ? (bookedStayName.trim() || `${currentDest.cityName} Hotel`) : '';
+    const userEnteredFlight = flightNumber.trim();
+    const userEnteredStay = bookedStayName.trim();
+
+    const isFlightConfirmed = isAlreadyBookedStatus && Boolean(userEnteredFlight);
+    const isStayConfirmed = isAlreadyBookedStatus && Boolean(userEnteredStay);
+
     const newTripConfig = {
       destId: selectedDestId,
       tripStatus: selectedStatus,
       startDate,
       endDate,
       durationDays: calculatedDays,
-      flightNumber: flightNumber.trim() || 'Direct Flight',
-      arrivalTime: arrivalTime.trim() || '14:00',
-      bookedStayName: finalStayName,
-      stayAddress: stayAddress.trim() || `${currentDest.cityName} City Center`
+      flightNumber: userEnteredFlight,
+      flightConfirmed: isFlightConfirmed,
+      arrivalTime: userEnteredFlight ? (arrivalTime.trim() || '14:00') : '',
+      bookedStayName: userEnteredStay,
+      stayConfirmed: isStayConfirmed,
+      stayAddress: userEnteredStay ? (stayAddress.trim() || `${currentDest.cityName} City Center`) : ''
     };
 
     onSaveTripConfig(newTripConfig);
 
-    // If trip is booked, trigger Push Notifications, Email Alerts & Calendar Sync based on user settings!
-    if (selectedStatus === 'already-booked') {
+    // If trip has confirmed bookings, trigger Push Notifications, Email Alerts & Calendar Sync based on user settings!
+    if (isFlightConfirmed || isStayConfirmed) {
       triggerBookedTripNotifications({
         tripConfig: newTripConfig,
         destinationData: currentDest,

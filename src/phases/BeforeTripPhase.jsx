@@ -38,6 +38,16 @@ export default function BeforeTripPhase({
   const [isEditingFlights, setIsEditingFlights] = useState(false);
   const [isEditingStays, setIsEditingStays] = useState(false);
   const [isEditingBookings, setIsEditingBookings] = useState(false);
+
+  // Custom User Booking Entry States
+  const [showCustomFlightInput, setShowCustomFlightInput] = useState(false);
+  const [customFlightNum, setCustomFlightNum] = useState('');
+  const [customAirline, setCustomAirline] = useState('');
+  const [customArrivalTime, setCustomArrivalTime] = useState('14:00');
+
+  const [showCustomStayInput, setShowCustomStayInput] = useState(false);
+  const [customStayName, setCustomStayName] = useState('');
+  const [customStayAddress, setCustomStayAddress] = useState('');
   
   // Interactive Essential Items Packing Checklist State with Persistence (Issue #3)
   const packingStorageKey = `sakhi_packing_checklist_${authUser?.id || 'default'}_${tripConfig?.id || destinationData?.id || 'default'}`;
@@ -402,11 +412,11 @@ export default function BeforeTripPhase({
     return rec.item.type.toLowerCase().includes(activeTypeFilter.toLowerCase());
   });
 
-  // Status flags
-  const isStayConfirmed = !!(tripConfig?.stayConfirmed || (tripConfig?.tripStatus === 'already-booked' && tripConfig?.bookedStayName));
-  const isFlightConfirmed = !!tripConfig?.flightConfirmed;
+  // Status flags strictly decoupled: each requires explicit user confirmation
+  const isStayConfirmed = Boolean(tripConfig?.stayConfirmed && tripConfig?.bookedStayName);
+  const isFlightConfirmed = Boolean(tripConfig?.flightConfirmed && tripConfig?.flightNumber);
   const bothConfirmed = isStayConfirmed && isFlightConfirmed;
-  const isAlreadyPlanned = tripConfig?.tripStatus === 'already-booked' && !optedForAiHelp;
+  const isAlreadyPlanned = tripConfig?.tripStatus === 'already-booked' && bothConfirmed && !optedForAiHelp;
 
   // Retrieve AI recommended safe flights for destination
   const recommendedFlights = getRecommendedFlights({
@@ -415,7 +425,7 @@ export default function BeforeTripPhase({
     travellerProfile
   });
 
-  // Handle direct flight confirmation
+  // Handle direct flight confirmation (Decoupled: does NOT touch stay status)
   const handleConfirmFlight = (flight) => {
     const updatedTripConfig = {
       ...tripConfig,
@@ -428,22 +438,52 @@ export default function BeforeTripPhase({
     };
     onSaveTripConfig(updatedTripConfig);
     setIsEditingFlights(false);
-    setBookingToast(`✅ Confirmed Flight ${flight.flightNumber} (${flight.airline}) landing at ${flight.arrivalTime}!`);
+    setBookingToast(`✅ Flight ${flight.flightNumber} (${flight.airline}) confirmed landing at ${flight.arrivalTime}!`);
     setTimeout(() => setBookingToast(null), 4500);
   };
 
-  // Handle direct booking confirmation from stays recommendations list
+  const handleClearFlight = () => {
+    const updatedTripConfig = {
+      ...tripConfig,
+      flightNumber: '',
+      airline: '',
+      destinationAirport: '',
+      arrivalTime: '',
+      departureTime: '',
+      flightConfirmed: false
+    };
+    onSaveTripConfig(updatedTripConfig);
+    setIsEditingFlights(false);
+    setBookingToast('Flight selection cleared.');
+    setTimeout(() => setBookingToast(null), 3000);
+  };
+
+  const handleConfirmCustomFlight = (e) => {
+    e.preventDefault();
+    if (!customFlightNum.trim()) return;
+    const updatedTripConfig = {
+      ...tripConfig,
+      flightNumber: customFlightNum.trim(),
+      airline: customAirline.trim() || 'Booked Carrier',
+      destinationAirport: `${destinationData.cityName} International Airport`,
+      arrivalTime: customArrivalTime.trim() || '14:00',
+      flightConfirmed: true
+    };
+    onSaveTripConfig(updatedTripConfig);
+    setShowCustomFlightInput(false);
+    setIsEditingFlights(false);
+    setBookingToast(`✅ Flight ${customFlightNum.trim()} confirmed!`);
+    setTimeout(() => setBookingToast(null), 4000);
+  };
+
+  // Handle direct booking confirmation from stays recommendations list (Decoupled: does NOT touch flight status)
   const handleConfirmBooking = (acc) => {
     const updatedTripConfig = {
       ...tripConfig,
       destId: destinationData.id,
-      tripStatus: 'already-booked',
       bookedStayName: acc.name,
       stayAddress: acc.neighborhood || `${destinationData.cityName} City Center`,
-      stayConfirmed: true,
-      flightNumber: tripConfig.flightNumber || 'Direct Flight',
-      destinationAirport: tripConfig.destinationAirport || `${destinationData.cityName} Airport`,
-      arrivalTime: tripConfig.arrivalTime || '14:00'
+      stayConfirmed: true
     };
 
     onSaveTripConfig(updatedTripConfig);
@@ -457,8 +497,38 @@ export default function BeforeTripPhase({
       onNotify: onDispatchNotifications
     });
 
-    setBookingToast(`✅ Confirmed booking for ${acc.name}! Push, Email & Calendar Sync dispatched.`);
+    setBookingToast(`✅ Confirmed stay at ${acc.name}! Push, Email & Calendar Sync dispatched.`);
     setTimeout(() => setBookingToast(null), 4500);
+  };
+
+  const handleClearStay = () => {
+    const updatedTripConfig = {
+      ...tripConfig,
+      bookedStayName: '',
+      stayAddress: '',
+      stayConfirmed: false
+    };
+    onSaveTripConfig(updatedTripConfig);
+    setIsEditingStays(false);
+    setBookingToast('Stay selection cleared.');
+    setTimeout(() => setBookingToast(null), 3000);
+  };
+
+  const handleConfirmCustomStay = (e) => {
+    e.preventDefault();
+    if (!customStayName.trim()) return;
+    const updatedTripConfig = {
+      ...tripConfig,
+      destId: destinationData.id,
+      bookedStayName: customStayName.trim(),
+      stayAddress: customStayAddress.trim() || `${destinationData.cityName} City Center`,
+      stayConfirmed: true
+    };
+    onSaveTripConfig(updatedTripConfig);
+    setShowCustomStayInput(false);
+    setIsEditingStays(false);
+    setBookingToast(`✅ Confirmed stay at ${customStayName.trim()}!`);
+    setTimeout(() => setBookingToast(null), 4000);
   };
 
   // Dynamic destination-aware & user-tailored budget estimation
@@ -601,7 +671,7 @@ export default function BeforeTripPhase({
                   <Hotel className="w-4 h-4 text-teal-600" /> Stay Confirmed ({tripConfig.bookedStayName})
                 </span>
                 <span className="text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full font-bold text-[10px]">
-                  Flight Pending
+                  Flight Pending Selection
                 </span>
               </div>
               <p className="text-slate-700 font-medium leading-relaxed">
@@ -615,25 +685,25 @@ export default function BeforeTripPhase({
                   <Plane className="w-4 h-4 text-blue-600" /> Flight Confirmed ({tripConfig.flightNumber})
                 </span>
                 <span className="text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full font-bold text-[10px]">
-                  Stay Pending
+                  Stay Pending Selection
                 </span>
               </div>
               <p className="text-slate-700 font-medium leading-relaxed">
-                Flight <strong>{tripConfig.flightNumber}</strong> confirmed landing at {tripConfig.arrivalTime}! Select and confirm your accommodation below.
+                Flight <strong>{tripConfig.flightNumber}</strong> confirmed landing at {tripConfig.arrivalTime || '14:00'}! Select and confirm your accommodation below.
               </p>
             </div>
           ) : (
             <div className="p-3.5 rounded-2xl bg-violet-50 border border-violet-200 text-xs space-y-2 animate-fade-in">
               <div className="flex items-center justify-between font-black text-violet-950">
                 <span className="flex items-center gap-1.5">
-                  <Compass className="w-4 h-4 text-violet-600" /> Bookings Pending Confirmation
+                  <Compass className="w-4 h-4 text-violet-600" /> Bookings Pending Your Selection
                 </span>
                 <span className="text-violet-800 font-extrabold">
                   {totalDays} Days Target
                 </span>
               </div>
               <p className="text-slate-700 font-medium leading-relaxed">
-                Explore recommended safe flights and stays below. Confirm your options to lock in your trip corridor and dispatch notifications!
+                Nothing is confirmed until you decide! Explore recommended safe flights and stays below, or enter your own tickets.
               </p>
             </div>
           )}
@@ -886,14 +956,29 @@ export default function BeforeTripPhase({
             </div>
 
             <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowCustomFlightInput(prev => !prev)}
+                className="px-3 py-1 rounded-xl bg-violet-50 hover:bg-violet-100 text-violet-700 text-xs font-bold transition-all shadow-2xs cursor-pointer"
+              >
+                {showCustomFlightInput ? 'Close Manual Entry' : '+ Enter My Ticket'}
+              </button>
+
               {isFlightConfirmed && !isEditingFlights ? (
-                <button
-                  onClick={() => setIsEditingFlights(true)}
-                  className="px-3 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all shadow-2xs flex items-center gap-1 cursor-pointer"
-                >
-                  <Edit3 className="w-3 h-3 text-slate-500" />
-                  <span>Change Flight</span>
-                </button>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => setIsEditingFlights(true)}
+                    className="px-3 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all shadow-2xs flex items-center gap-1 cursor-pointer"
+                  >
+                    <Edit3 className="w-3 h-3 text-slate-500" />
+                    <span>Change Flight</span>
+                  </button>
+                  <button
+                    onClick={handleClearFlight}
+                    className="px-2.5 py-1 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold transition-colors cursor-pointer"
+                  >
+                    Clear
+                  </button>
+                </div>
               ) : isEditingFlights ? (
                 <button
                   onClick={() => setIsEditingFlights(false)}
@@ -904,6 +989,64 @@ export default function BeforeTripPhase({
               ) : null}
             </div>
           </div>
+
+          {showCustomFlightInput && (
+            <form onSubmit={handleConfirmCustomFlight} className="p-4 rounded-2xl bg-violet-50/70 border border-violet-200 space-y-3 animate-fade-in">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black text-violet-950 flex items-center gap-1.5">
+                  <Plane className="w-4 h-4 text-violet-600" /> Enter Your Booked Flight Ticket
+                </span>
+                <span className="text-[11px] text-violet-700 font-semibold">Decoupled: Only confirms flight</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <div>
+                  <label className="text-[10px] font-bold text-slate-600 uppercase block mb-1">Airline Name</label>
+                  <input
+                    type="text"
+                    value={customAirline}
+                    onChange={(e) => setCustomAirline(e.target.value)}
+                    placeholder="e.g. British Airways, Delta"
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold focus:outline-none focus:border-violet-500"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-slate-600 uppercase block mb-1">Flight Number *</label>
+                  <input
+                    type="text"
+                    required
+                    value={customFlightNum}
+                    onChange={(e) => setCustomFlightNum(e.target.value)}
+                    placeholder="e.g. BA 116, AF 23"
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold focus:outline-none focus:border-violet-500"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-slate-600 uppercase block mb-1">Landing Time</label>
+                  <input
+                    type="time"
+                    value={customArrivalTime}
+                    onChange={(e) => setCustomArrivalTime(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold focus:outline-none focus:border-violet-500"
+                  />
+                </div>
+              </div>
+              <div className="flex items-center justify-end gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowCustomFlightInput(false)}
+                  className="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-1.5 rounded-xl bg-violet-600 hover:bg-violet-700 text-white text-xs font-black shadow-xs cursor-pointer"
+                >
+                  ✓ Confirm My Flight Ticket
+                </button>
+              </div>
+            </form>
+          )}
 
           {/* Flight Cards */}
           <div className="space-y-3">
@@ -981,22 +1124,47 @@ export default function BeforeTripPhase({
                   )}
 
                   {/* Action Bar */}
-                  <div className="flex items-center justify-between pt-1 border-t border-slate-100">
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-100">
                     <span className="text-xs font-black text-slate-900">
                       {flight.priceValue ? formatPrice(flight.priceValue, homeCurrencyCode) : (flight.price ? formatPrice(flight.price, homeCurrencyCode) : 'Included')} <span className="text-[10px] font-medium text-slate-400">/ estimated</span>
                     </span>
 
-                    <button
-                      onClick={() => handleConfirmFlight(flight)}
-                      className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer shadow-2xs flex items-center gap-1.5 ${
-                        isThisFlightConfirmed
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-violet-600 hover:bg-violet-700 text-white'
-                      }`}
-                    >
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>{isThisFlightConfirmed ? '✓ Confirmed Flight' : 'Confirm Flight'}</span>
-                    </button>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {flight.googleFlightsUrl && (
+                        <a
+                          href={flight.googleFlightsUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-2.5 py-1.5 rounded-xl border border-slate-200 hover:border-slate-300 text-slate-700 bg-white text-[11px] font-bold transition-all flex items-center gap-1 shadow-2xs"
+                        >
+                          <span>Google Flights</span>
+                          <ExternalLink className="w-3 h-3 text-slate-400" />
+                        </a>
+                      )}
+
+                      {isThisFlightConfirmed ? (
+                        <div className="flex items-center gap-1.5">
+                          <span className="px-3 py-1.5 rounded-xl text-xs font-black bg-blue-600 text-white flex items-center gap-1 shadow-2xs">
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            <span>✓ Confirmed Flight</span>
+                          </span>
+                          <button
+                            onClick={handleClearFlight}
+                            className="px-2.5 py-1.5 rounded-xl text-[11px] font-bold bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-600 transition-colors cursor-pointer"
+                          >
+                            Clear
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => handleConfirmFlight(flight)}
+                          className="px-3.5 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer shadow-2xs flex items-center gap-1.5 bg-violet-600 hover:bg-violet-700 text-white"
+                        >
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>Select & Confirm Flight</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               );
@@ -1017,14 +1185,29 @@ export default function BeforeTripPhase({
             </div>
 
             <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowCustomStayInput(prev => !prev)}
+                className="px-3 py-1 rounded-xl bg-violet-50 hover:bg-violet-100 text-violet-700 text-xs font-bold transition-all shadow-2xs cursor-pointer"
+              >
+                {showCustomStayInput ? 'Close Manual Entry' : '+ Enter My Stay'}
+              </button>
+
               {isStayConfirmed && !isEditingStays ? (
-                <button
-                  onClick={() => setIsEditingStays(true)}
-                  className="px-3 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all shadow-2xs flex items-center gap-1 cursor-pointer"
-                >
-                  <Edit3 className="w-3 h-3 text-slate-500" />
-                  <span>Browse Other Stays</span>
-                </button>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => setIsEditingStays(true)}
+                    className="px-3 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all shadow-2xs flex items-center gap-1 cursor-pointer"
+                  >
+                    <Edit3 className="w-3 h-3 text-slate-500" />
+                    <span>Browse Other Stays</span>
+                  </button>
+                  <button
+                    onClick={handleClearStay}
+                    className="px-2.5 py-1 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold transition-colors cursor-pointer"
+                  >
+                    Clear
+                  </button>
+                </div>
               ) : isEditingStays ? (
                 <button
                   onClick={() => setIsEditingStays(false)}
@@ -1051,6 +1234,55 @@ export default function BeforeTripPhase({
               )}
             </div>
           </div>
+
+          {showCustomStayInput && (
+            <form onSubmit={handleConfirmCustomStay} className="p-4 rounded-2xl bg-teal-50/70 border border-teal-200 space-y-3 animate-fade-in">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black text-teal-950 flex items-center gap-1.5">
+                  <Hotel className="w-4 h-4 text-teal-600" /> Enter Your Booked Accommodation
+                </span>
+                <span className="text-[11px] text-teal-700 font-semibold">Decoupled: Only confirms stay</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div>
+                  <label className="text-[10px] font-bold text-slate-600 uppercase block mb-1">Hotel / Hostel / Stay Name *</label>
+                  <input
+                    type="text"
+                    required
+                    value={customStayName}
+                    onChange={(e) => setCustomStayName(e.target.value)}
+                    placeholder="e.g. Mama Shelter, Generator Hostel, Airbnb"
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold focus:outline-none focus:border-teal-500"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-slate-600 uppercase block mb-1">Neighborhood / Address</label>
+                  <input
+                    type="text"
+                    value={customStayAddress}
+                    onChange={(e) => setCustomStayAddress(e.target.value)}
+                    placeholder={`e.g. ${destinationData.cityName} City Center`}
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold focus:outline-none focus:border-teal-500"
+                  />
+                </div>
+              </div>
+              <div className="flex items-center justify-end gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowCustomStayInput(false)}
+                  className="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-black shadow-xs cursor-pointer"
+                >
+                  ✓ Confirm My Stay
+                </button>
+              </div>
+            </form>
+          )}
 
           {/* CUSTOM INSTRUCTIONS & TRAVELLER MEMORY PANEL (Visible when browsing) */}
           {(!isStayConfirmed || isEditingStays) && (
@@ -1194,17 +1426,28 @@ export default function BeforeTripPhase({
                           <ExternalLink className="w-3 h-3" />
                         </a>
 
-                        <button
-                          onClick={() => handleConfirmBooking(acc)}
-                          className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer shadow-2xs flex items-center gap-1 ${
-                            isThisStayBooked
-                              ? 'bg-emerald-600 text-white'
-                              : 'bg-violet-600 hover:bg-violet-700 text-white'
-                          }`}
-                        >
-                          <BookmarkCheck className="w-3.5 h-3.5" />
-                          <span>{isThisStayBooked ? '✓ Booked Stay' : 'Confirm Stay'}</span>
-                        </button>
+                        {isThisStayBooked ? (
+                          <div className="flex items-center gap-1.5">
+                            <span className="px-3 py-1.5 rounded-xl text-xs font-black bg-emerald-600 text-white flex items-center gap-1 shadow-2xs">
+                              <BookmarkCheck className="w-3.5 h-3.5" />
+                              <span>✓ Confirmed Stay</span>
+                            </span>
+                            <button
+                              onClick={handleClearStay}
+                              className="px-2.5 py-1.5 rounded-xl text-[11px] font-bold bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-600 transition-colors cursor-pointer"
+                            >
+                              Clear
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => handleConfirmBooking(acc)}
+                            className="px-3.5 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer shadow-2xs flex items-center gap-1 bg-violet-600 hover:bg-violet-700 text-white"
+                          >
+                            <BookmarkCheck className="w-3.5 h-3.5" />
+                            <span>Select & Confirm Stay</span>
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>

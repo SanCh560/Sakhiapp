@@ -19,8 +19,8 @@ export default function EditTripModal({ isOpen, onClose, activeTrip, onSaveTrip,
     return getFutureDateStr(5, todayStr);
   });
   const [durationDays, setDurationDays] = useState(activeTrip?.durationDays || 5);
-  const [flightNumber, setFlightNumber] = useState(activeTrip?.flightNumber || 'OK 534');
-  const [bookedStayName, setBookedStayName] = useState(activeTrip?.bookedStayName || 'Mama Shelter Prague');
+  const [flightNumber, setFlightNumber] = useState(activeTrip?.flightNumber || '');
+  const [bookedStayName, setBookedStayName] = useState(activeTrip?.bookedStayName || '');
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [dateError, setDateError] = useState('');
 
@@ -32,8 +32,8 @@ export default function EditTripModal({ isOpen, onClose, activeTrip, onSaveTrip,
       setStartDate(validStart);
       setEndDate(validEnd);
       setDurationDays(activeTrip.durationDays || 5);
-      setFlightNumber(activeTrip.flightNumber || 'OK 534');
-      setBookedStayName(activeTrip.bookedStayName || 'Mama Shelter Prague');
+      setFlightNumber(activeTrip.flightNumber || '');
+      setBookedStayName(activeTrip.bookedStayName || '');
       setDateError('');
     }
   }, [activeTrip]);
@@ -88,12 +88,17 @@ export default function EditTripModal({ isOpen, onClose, activeTrip, onSaveTrip,
       return;
     }
 
+    const cleanFlight = (flightNumber || '').trim();
+    const cleanStay = (bookedStayName || '').trim();
+
     onSaveTrip(activeTrip.id, {
       startDate,
       endDate,
       durationDays: parseInt(durationDays, 10),
-      flightNumber,
-      bookedStayName
+      flightNumber: cleanFlight,
+      flightConfirmed: cleanFlight ? (activeTrip?.flightConfirmed ?? true) : false,
+      bookedStayName: cleanStay,
+      stayConfirmed: cleanStay ? (activeTrip?.stayConfirmed ?? true) : false
       // Note: destinationId remains immutable!
     });
     onClose();
@@ -187,7 +192,7 @@ export default function EditTripModal({ isOpen, onClose, activeTrip, onSaveTrip,
                   type="text"
                   value={flightNumber}
                   onChange={(e) => setFlightNumber(e.target.value)}
-                  placeholder="e.g. OK 534"
+                  placeholder="e.g. BA 116, AF 023, or leave blank"
                   className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-violet-500/20"
                 />
               </div>
@@ -202,7 +207,7 @@ export default function EditTripModal({ isOpen, onClose, activeTrip, onSaveTrip,
                   type="text"
                   value={bookedStayName}
                   onChange={(e) => setBookedStayName(e.target.value)}
-                  placeholder="e.g. Mama Shelter Prague"
+                  placeholder="e.g. Hotel / Hostel name, or leave blank"
                   className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-violet-500/20"
                 />
               </div>

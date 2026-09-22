@@ -293,6 +293,197 @@ const CURATED_CITY_FLIGHTS = {
       ],
       whyChosen: 'Dutch flag-carrier landing in early afternoon with one of the world’s most seamless airport-to-city rail links.'
     }
+  ],
+
+  'lisbon': [
+    {
+      id: 'fl-lis-1',
+      flightNumber: 'TP 104',
+      airline: 'TAP Air Portugal',
+      airlineLogo: '🇵🇹',
+      originAirport: 'EWR (Newark)',
+      destinationAirport: 'Humberto Delgado Airport (LIS)',
+      terminal: 'Terminal 1',
+      departureTime: '08:30',
+      arrivalTime: '15:15',
+      duration: '6h 45m (Nonstop)',
+      price: '$520',
+      priceValue: 520,
+      daylightArrival: true,
+      matchScore: { overall: 98, safety: 99, personalFit: 98, comfort: 97, convenience: 98 },
+      safetyFeatures: [
+        'Daylight arrival (15:15) with direct Aeroporto Metro Station connection inside Terminal 1',
+        'Staffed tourist police desk in arrivals hall',
+        'Direct red line metro to central Lisbon in 20 minutes'
+      ],
+      whyChosen: 'Official Portuguese flag-carrier flight arriving in mid-afternoon with direct covered subway connection.'
+    },
+    {
+      id: 'fl-lis-2',
+      flightNumber: 'UA 064',
+      airline: 'United Airlines',
+      airlineLogo: '🇺🇸',
+      originAirport: 'IAD (Washington Dulles)',
+      destinationAirport: 'Humberto Delgado Airport (LIS)',
+      terminal: 'Terminal 1',
+      departureTime: '09:15',
+      arrivalTime: '15:55',
+      duration: '7h 40m (Nonstop)',
+      price: '$560',
+      priceValue: 560,
+      daylightArrival: true,
+      matchScore: { overall: 96, safety: 97, personalFit: 96, comfort: 96, convenience: 95 },
+      safetyFeatures: [
+        'Direct daytime flight arriving with ample daylight hours',
+        'Step-free escalator and elevator links to central transit'
+      ],
+      whyChosen: 'Comfortable nonstop Star Alliance transatlantic service into Lisbon Terminal 1.'
+    }
+  ],
+
+  'barcelona': [
+    {
+      id: 'fl-bcn-1',
+      flightNumber: 'IB 2628',
+      airline: 'Iberia',
+      airlineLogo: '🇪🇸',
+      originAirport: 'JFK (New York)',
+      destinationAirport: 'Josep Tarradellas Barcelona-El Prat (BCN)',
+      terminal: 'Terminal 1',
+      departureTime: '08:45',
+      arrivalTime: '15:20',
+      duration: '7h 35m (Nonstop)',
+      price: '$530',
+      priceValue: 530,
+      daylightArrival: true,
+      matchScore: { overall: 97, safety: 98, personalFit: 97, comfort: 96, convenience: 98 },
+      safetyFeatures: [
+        'Arrives at modern Terminal 1 with direct Aerobús express shuttle bay outside exit',
+        'Aerobús drops off directly at well-lit Plaça de Catalunya',
+        'Continuous Mossos d\'Esquadra security patrols in terminal'
+      ],
+      whyChosen: 'Direct daylight transatlantic arrival with immediate access to express high-frequency Aerobús.'
+    }
+  ],
+
+  'berlin': [
+    {
+      id: 'fl-ber-1',
+      flightNumber: 'LH 196',
+      airline: 'Lufthansa',
+      airlineLogo: '🇩🇪',
+      originAirport: 'JFK (New York via FRA)',
+      destinationAirport: 'Berlin Brandenburg Airport (BER)',
+      terminal: 'Terminal 1',
+      departureTime: '08:15',
+      arrivalTime: '14:40',
+      duration: '8h 25m (Direct)',
+      price: '$570',
+      priceValue: 570,
+      daylightArrival: true,
+      matchScore: { overall: 97, safety: 99, personalFit: 96, comfort: 97, convenience: 98 },
+      safetyFeatures: [
+        'Daylight arrival at new unified BER Airport with underground FEX Airport Express train platform',
+        'Direct 28-minute train to Berlin Hauptbahnhof (Central Station)'
+      ],
+      whyChosen: 'German flag-carrier connection landing at Terminal 1 with seamless underground rail.'
+    }
+  ],
+
+  'vienna': [
+    {
+      id: 'fl-vie-1',
+      flightNumber: 'OS 088',
+      airline: 'Austrian Airlines',
+      airlineLogo: '🇦🇹',
+      originAirport: 'JFK (New York)',
+      destinationAirport: 'Vienna International Airport (VIE)',
+      terminal: 'Terminal 3',
+      departureTime: '08:50',
+      arrivalTime: '15:10',
+      duration: '8h 20m (Nonstop)',
+      price: '$590',
+      priceValue: 590,
+      daylightArrival: true,
+      matchScore: { overall: 98, safety: 99, personalFit: 97, comfort: 98, convenience: 99 },
+      safetyFeatures: [
+        'Lands at ultra-safe, clean Terminal 3 with direct 16-minute City Airport Train (CAT) to Wien Mitte',
+        'Female-friendly passenger support desk'
+      ],
+      whyChosen: 'Award-winning Austrian flag-carrier with world-class hospitality and nonstop CAT rail.'
+    }
+  ],
+
+  'zurich': [
+    {
+      id: 'fl-zrh-1',
+      flightNumber: 'LX 015',
+      airline: 'Swiss International Air Lines',
+      airlineLogo: '🇨🇭',
+      originAirport: 'JFK (New York)',
+      destinationAirport: 'Zurich Airport (ZRH)',
+      terminal: 'Airside Center',
+      departureTime: '09:00',
+      arrivalTime: '14:35',
+      duration: '7h 35m (Nonstop)',
+      price: '$640',
+      priceValue: 640,
+      daylightArrival: true,
+      matchScore: { overall: 99, safety: 100, personalFit: 98, comfort: 99, convenience: 99 },
+      safetyFeatures: [
+        'Top-rated European airport with direct S-Bahn train station directly underneath check-in 3',
+        '9-minute train to Zurich HB (Central Station)'
+      ],
+      whyChosen: 'Punctual Swiss flag carrier landing in early afternoon with flawless rail links.'
+    }
+  ],
+
+  'dublin': [
+    {
+      id: 'fl-dub-1',
+      flightNumber: 'EI 104',
+      airline: 'Aer Lingus',
+      airlineLogo: '🇮🇪',
+      originAirport: 'JFK (New York)',
+      destinationAirport: 'Dublin Airport (DUB)',
+      terminal: 'Terminal 2',
+      departureTime: '08:30',
+      arrivalTime: '14:15',
+      duration: '6h 45m (Nonstop)',
+      price: '$510',
+      priceValue: 510,
+      daylightArrival: true,
+      matchScore: { overall: 97, safety: 98, personalFit: 97, comfort: 96, convenience: 98 },
+      safetyFeatures: [
+        'Daylight arrival at Terminal 2 with direct Dublin Express Coach stop right outside',
+        'US Preclearance on return makes customs seamless'
+      ],
+      whyChosen: 'Irish flag carrier with direct daytime arrival and friendly transatlantic crew.'
+    }
+  ],
+
+  'madrid': [
+    {
+      id: 'fl-mad-1',
+      flightNumber: 'IB 6250',
+      airline: 'Iberia',
+      airlineLogo: '🇪🇸',
+      originAirport: 'JFK (New York)',
+      destinationAirport: 'Adolfo Suárez Madrid-Barajas (MAD)',
+      terminal: 'Terminal 4',
+      departureTime: '08:40',
+      arrivalTime: '14:50',
+      duration: '7h 10m (Nonstop)',
+      price: '$540',
+      priceValue: 540,
+      daylightArrival: true,
+      matchScore: { overall: 97, safety: 98, personalFit: 97, comfort: 97, convenience: 98 },
+      safetyFeatures: [
+        'Arrives at world-renowned Terminal 4 with direct Cercanías C1 train and Metro Line 8',
+        'Well-staffed tourist information desk in arrivals'
+      ],
+      whyChosen: 'Direct flagship route into Madrid Terminal 4 with step-free Cercanías train into Atocha.'
+    }
   ]
 };
 
@@ -390,13 +581,59 @@ export const COUNTRY_HUBS = {
 };
 
 /**
+ * Helper to build live Google Flights deep-link
+ */
+export function buildGoogleFlightsUrl(origin, destination, date) {
+  const originClean = (origin || '').replace(/\([^)]*\)/g, '').trim();
+  const destClean = (destination || '').replace(/\([^)]*\)/g, '').trim();
+  const travelDate = date || '2026-10-10';
+  const query = `flights from ${originClean} to ${destClean} on ${travelDate}`;
+  return `https://www.google.com/travel/flights?q=${encodeURIComponent(query)}`;
+}
+
+/**
+ * Helper to build live Skyscanner search link
+ */
+export function buildSkyscannerUrl(origin, destination) {
+  const originClean = (origin || '').replace(/\([^)]*\)/g, '').trim();
+  const destClean = (destination || '').replace(/\([^)]*\)/g, '').trim();
+  return `https://www.skyscanner.com/transport/flights/?query=${encodeURIComponent(`${originClean} to ${destClean}`)}`;
+}
+
+// Global Flag Carriers Registry for authentic route matching
+export const DESTINATION_FLAG_CARRIERS = {
+  'portugal': { airline: 'TAP Air Portugal', logo: '🇵🇹', prefix: 'TP', hubName: 'Humberto Delgado Airport (LIS)' },
+  'spain': { airline: 'Iberia', logo: '🇪🇸', prefix: 'IB', hubName: 'Adolfo Suárez Madrid-Barajas (MAD)' },
+  'france': { airline: 'Air France', logo: '🇫🇷', prefix: 'AF', hubName: 'Charles de Gaulle Airport (CDG)' },
+  'germany': { airline: 'Lufthansa', logo: '🇩🇪', prefix: 'LH', hubName: 'Frankfurt Airport (FRA)' },
+  'italy': { airline: 'ITA Airways', logo: '🇮🇹', prefix: 'AZ', hubName: 'Leonardo da Vinci–Fiumicino (FCO)' },
+  'united kingdom': { airline: 'British Airways', logo: '🇬🇧', prefix: 'BA', hubName: 'Heathrow Airport (LHR)' },
+  'netherlands': { airline: 'KLM Royal Dutch Airlines', logo: '🇳🇱', prefix: 'KL', hubName: 'Amsterdam Airport Schiphol (AMS)' },
+  'switzerland': { airline: 'Swiss International Air Lines', logo: '🇨🇭', prefix: 'LX', hubName: 'Zurich Airport (ZRH)' },
+  'austria': { airline: 'Austrian Airlines', logo: '🇦🇹', prefix: 'OS', hubName: 'Vienna International Airport (VIE)' },
+  'ireland': { airline: 'Aer Lingus', logo: '🇮🇪', prefix: 'EI', hubName: 'Dublin Airport (DUB)' },
+  'czech republic': { airline: 'Czech Airlines (Smartwings)', logo: '🇨🇿', prefix: 'OK', hubName: 'Václav Havel Airport Prague (PRG)' },
+  'greece': { airline: 'Aegean Airlines', logo: '🇬🇷', prefix: 'A3', hubName: 'Athens International Airport (ATH)' },
+  'sweden': { airline: 'SAS Scandinavian Airlines', logo: '🇸🇪', prefix: 'SK', hubName: 'Stockholm Arlanda Airport (ARN)' },
+  'norway': { airline: 'Norwegian Air', logo: '🇳🇴', prefix: 'DY', hubName: 'Oslo Airport (OSL)' },
+  'denmark': { airline: 'SAS Scandinavian Airlines', logo: '🇩🇰', prefix: 'SK', hubName: 'Copenhagen Airport (CPH)' },
+  'japan': { airline: 'All Nippon Airways (ANA)', logo: '🇯🇵', prefix: 'NH', hubName: 'Tokyo Haneda Airport (HND)' },
+  'singapore': { airline: 'Singapore Airlines', logo: '🇸🇬', prefix: 'SQ', hubName: 'Singapore Changi Airport (SIN)' },
+  'australia': { airline: 'Qantas', logo: '🇦🇺', prefix: 'QF', hubName: 'Sydney Kingsford Smith (SYD)' },
+  'canada': { airline: 'Air Canada', logo: '🇨🇦', prefix: 'AC', hubName: 'Toronto Pearson (YYZ)' },
+  'india': { airline: 'Air India', logo: '🇮🇳', prefix: 'AI', hubName: 'Indira Gandhi International (DEL)' },
+  'united states': { airline: 'Delta Air Lines', logo: '🇺🇸', prefix: 'DL', hubName: 'JFK (New York)' }
+};
+
+/**
  * Retrieve Curated or Dynamically Generated Safe Flights for ANY Destination
- * Customized strictly based on the user's registered homeCountry!
+ * Customized strictly based on the user's registered homeCountry and travel dates!
  */
 export function getRecommendedFlights({ destinationData, tripConfig, travellerProfile }) {
   const cityName = destinationData?.cityName || 'Destination';
   const destCountry = (destinationData?.country || '').toLowerCase().trim();
   const cleanKey = cityName.toLowerCase().trim();
+  const travelDate = tripConfig?.startDate || '2026-10-10';
 
   // 1. Identify User's Registered Home Country
   const rawHomeCountry = travellerProfile?.homeCountry || 'United States';
@@ -411,34 +648,59 @@ export function getRecommendedFlights({ destinationData, tripConfig, travellerPr
     }
   }
 
+  // Helper to attach live search links to flights
+  const attachLiveLinks = (flights) => {
+    return flights.map(f => ({
+      ...f,
+      googleFlightsUrl: f.googleFlightsUrl || buildGoogleFlightsUrl(f.originAirport, f.destinationAirport, travelDate),
+      skyscannerUrl: f.skyscannerUrl || buildSkyscannerUrl(f.originAirport, f.destinationAirport)
+    }));
+  };
+
   // 2. If Home Country is USA, check curated registry for USA departure
   const isUserFromUSA = cleanHomeCountry.includes('united states') || cleanHomeCountry === 'usa' || cleanHomeCountry === 'us';
   if (isUserFromUSA && CURATED_CITY_FLIGHTS[cleanKey]) {
-    return CURATED_CITY_FLIGHTS[cleanKey];
+    return attachLiveLinks(CURATED_CITY_FLIGHTS[cleanKey]);
   }
 
-  // 3. For all other countries (or destinations without curated USA entries),
-  // dynamically generate realistic safe daytime flights originating from the user's actual home country!
+  // 3. For all other countries or destinations, dynamically generate realistic safe daytime flights
   const destAirportName = destinationData?.airportName || `${cityName} International Airport`;
   const destCode = cityName.slice(0, 3).toUpperCase();
   const hubs = countryHubInfo.hubs;
   const primaryHub = hubs[0];
   const secondaryHub = hubs[1] || hubs[0];
 
+  // Check if destination country has a recognized flag carrier
+  let destinationCarrier = null;
+  for (const [cKey, cInfo] of Object.entries(DESTINATION_FLAG_CARRIERS)) {
+    if (destCountry.includes(cKey) || cKey.includes(destCountry)) {
+      destinationCarrier = cInfo;
+      break;
+    }
+  }
+
   const isDomestic = cleanHomeCountry === destCountry || cleanHomeCountry.includes(destCountry) || destCountry.includes(cleanHomeCountry);
   const flightDuration = isDomestic ? '1h 45m (Direct)' : '7h 30m (Direct Daytime)';
   const basePrice = isDomestic ? 190 : 540;
 
-  return [
+  const flight1Airline = destinationCarrier?.airline || primaryHub.carrier;
+  const flight1Logo = destinationCarrier?.logo || primaryHub.flag;
+  const flight1Number = destinationCarrier ? `${destinationCarrier.prefix} 104` : `${primaryHub.carrier.slice(0, 2).toUpperCase()} 342`;
+
+  const flight2Airline = secondaryHub.carrier;
+  const flight2Logo = secondaryHub.flag;
+  const flight2Number = `${secondaryHub.carrier.slice(0, 2).toUpperCase()} 718`;
+
+  const rawCandidates = [
     {
       id: `fl-${destCode.toLowerCase()}-home-1`,
-      flightNumber: `${primaryHub.carrier.slice(0, 2).toUpperCase()} 342`,
-      airline: primaryHub.carrier,
-      airlineLogo: primaryHub.flag,
+      flightNumber: flight1Number,
+      airline: flight1Airline,
+      airlineLogo: flight1Logo,
       originAirport: primaryHub.name,
       destinationAirport: destAirportName,
       terminal: 'Terminal 1 / International Pier',
-      departureTime: '09:15',
+      departureTime: '08:45',
       arrivalTime: '14:30',
       duration: flightDuration,
       price: `$${basePrice}`,
@@ -454,13 +716,13 @@ export function getRecommendedFlights({ destinationData, tripConfig, travellerPr
     },
     {
       id: `fl-${destCode.toLowerCase()}-home-2`,
-      flightNumber: `${secondaryHub.carrier.slice(0, 2).toUpperCase()} 718`,
-      airline: secondaryHub.carrier,
-      airlineLogo: secondaryHub.flag,
+      flightNumber: flight2Number,
+      airline: flight2Airline,
+      airlineLogo: flight2Logo,
       originAirport: secondaryHub.name,
       destinationAirport: destAirportName,
       terminal: 'Main Concourse',
-      departureTime: '10:30',
+      departureTime: '10:15',
       arrivalTime: '15:45',
       duration: flightDuration,
       price: `$${basePrice + 45}`,
@@ -475,6 +737,8 @@ export function getRecommendedFlights({ destinationData, tripConfig, travellerPr
       whyChosen: `Direct reliable route from ${countryHubInfo.name} to ${cityName} with verified safe terminal corridors.`
     }
   ];
+
+  return attachLiveLinks(rawCandidates);
 }
 
 const CURATED_RETURN_FLIGHTS = {
@@ -582,6 +846,7 @@ export function getRecommendedReturnFlights({ destinationData, tripConfig, trave
   const cityName = destinationData?.cityName || 'Destination';
   const destCountry = (destinationData?.country || '').toLowerCase().trim();
   const cleanKey = cityName.toLowerCase().trim();
+  const returnDate = tripConfig?.endDate || '2026-10-15';
 
   // 1. Identify User's Registered Home Country
   const rawHomeCountry = travellerProfile?.homeCountry || 'United States';
@@ -596,10 +861,18 @@ export function getRecommendedReturnFlights({ destinationData, tripConfig, trave
     }
   }
 
+  const attachLiveLinks = (flights) => {
+    return flights.map(f => ({
+      ...f,
+      googleFlightsUrl: f.googleFlightsUrl || buildGoogleFlightsUrl(f.originAirport, f.destinationAirport, returnDate),
+      skyscannerUrl: f.skyscannerUrl || buildSkyscannerUrl(f.originAirport, f.destinationAirport)
+    }));
+  };
+
   // 2. If Home Country is USA, check curated registry for USA return
   const isUserFromUSA = cleanHomeCountry.includes('united states') || cleanHomeCountry === 'usa' || cleanHomeCountry === 'us';
   if (isUserFromUSA && CURATED_RETURN_FLIGHTS[cleanKey]) {
-    return CURATED_RETURN_FLIGHTS[cleanKey];
+    return attachLiveLinks(CURATED_RETURN_FLIGHTS[cleanKey]);
   }
 
   // 3. For all other countries or destinations, dynamically generate realistic safe return flights
@@ -613,7 +886,7 @@ export function getRecommendedReturnFlights({ destinationData, tripConfig, trave
   const flightDuration = isDomestic ? '1h 50m (Direct)' : '8h 15m (Direct)';
   const basePrice = isDomestic ? 185 : 560;
 
-  return [
+  const rawCandidates = [
     {
       id: `fl-ret-${destCode.toLowerCase()}-1`,
       flightNumber: `${primaryHub.carrier.slice(0, 2).toUpperCase()} 343`,
@@ -659,5 +932,7 @@ export function getRecommendedReturnFlights({ destinationData, tripConfig, trave
       whyChosen: `Afternoon departure flight from ${cityName} to ${countryHubInfo.name} maximizing your final day exploration time.`
     }
   ];
+
+  return attachLiveLinks(rawCandidates);
 }
 

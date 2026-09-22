@@ -68,7 +68,9 @@ const DEMO_SARAH_PLANNED_TRIPS = [
     durationDays: 5,
     tripStatus: 'needs-planning',
     bookedStayName: '',
-    flightNumber: 'NH 105'
+    flightNumber: '',
+    flightConfirmed: false,
+    stayConfirmed: false
   },
   {
     id: 'trip-italy-2',
@@ -79,7 +81,9 @@ const DEMO_SARAH_PLANNED_TRIPS = [
     durationDays: 5,
     tripStatus: 'needs-planning',
     bookedStayName: '',
-    flightNumber: 'AZ 610'
+    flightNumber: '',
+    flightConfirmed: false,
+    stayConfirmed: false
   }
 ];
 
@@ -89,10 +93,13 @@ const DEMO_SARAH_TRIP_CONFIG = {
   startDate: '2026-10-10',
   endDate: '2026-10-15',
   durationDays: 5,
-  flightNumber: 'NH 105',
-  arrivalTime: '14:30',
+  flightNumber: '',
+  arrivalTime: '',
+  airline: '',
+  flightConfirmed: false,
   bookedStayName: '',
-  stayAddress: 'Shibuya, Tokyo'
+  stayAddress: '',
+  stayConfirmed: false
 };
 
 const DEMO_SARAH_TRIP_HISTORY = [

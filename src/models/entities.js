@@ -51,7 +51,6 @@ export function createTraveller(data = {}) {
  * 2. Trip Entity
  */
 export function createTrip(data = {}) {
-  const isBooked = data.tripStatus === 'already-booked';
   return {
     id: data.id || 'trip-default',
     travellerId: data.travellerId || 'traveller-default',
@@ -61,12 +60,12 @@ export function createTrip(data = {}) {
     endDate: data.endDate || '2026-08-15',
     durationDays: data.durationDays || 5,
     flightNumber: data.flightNumber || '',
-    arrivalTime: data.arrivalTime || '14:00',
+    arrivalTime: data.arrivalTime || '',
     departureTime: data.departureTime || '',
     destinationAirport: data.destinationAirport || '',
     airline: data.airline || '',
-    flightConfirmed: data.flightConfirmed ?? (isBooked && !!data.flightNumber),
-    departureFlightConfirmed: data.departureFlightConfirmed ?? false,
+    flightConfirmed: Boolean(data.flightConfirmed),
+    departureFlightConfirmed: Boolean(data.departureFlightConfirmed),
     departureFlightNumber: data.departureFlightNumber || '',
     departureAirline: data.departureAirline || '',
     departureDate: data.departureDate || '',
@@ -75,7 +74,7 @@ export function createTrip(data = {}) {
     planStatus: data.planStatus || 'suggested',
     bookedStayName: data.bookedStayName || '',
     stayAddress: data.stayAddress || '',
-    stayConfirmed: data.stayConfirmed ?? (isBooked && !!data.bookedStayName),
+    stayConfirmed: Boolean(data.stayConfirmed),
     isActive: data.isActive ?? true
   };
 }

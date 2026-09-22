@@ -262,10 +262,11 @@ export function generateDynamicItinerary(destinationData, travellerProfile, trip
   const lowerCity = cityName.trim().toLowerCase();
   const durationDays = Math.max(1, parseInt(tripConfig?.durationDays || 5, 10));
   
-  // Real booked stay name from tripConfig or verified destination accommodations
-  const actualStayName = tripConfig?.bookedStayName || 
-                         destinationData?.accommodations?.[0]?.name || 
-                         `${cityName} Verified Boutique Stay`;
+  // Real booked stay name from tripConfig if confirmed, otherwise sensible placeholder
+  const hasConfirmedStay = Boolean(tripConfig?.stayConfirmed && tripConfig?.bookedStayName);
+  const actualStayName = hasConfirmedStay
+    ? tripConfig.bookedStayName
+    : (tripConfig?.bookedStayName || `${cityName} Boutique Stay`);
 
   // Check if departure flight is confirmed
   const isDepartureConfirmed = !!tripConfig?.departureFlightConfirmed;

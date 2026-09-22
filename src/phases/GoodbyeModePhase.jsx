@@ -162,8 +162,9 @@ export default function GoodbyeModePhase({
   const [customPhotoUrl, setCustomPhotoUrl] = useState('');
   const [customPhotoCaption, setCustomPhotoCaption] = useState('');
 
-  const displayName = travellerProfile?.name?.split(' ')[0] || authUser?.name?.split(' ')[0] || 'Traveller';
-  const actualStayName = tripConfig?.bookedStayName || destinationData?.accommodations?.[0]?.name || `${destinationData?.cityName || 'City'} Verified Stay`;
+  const actualStayName = (tripConfig?.stayConfirmed && tripConfig?.bookedStayName)
+    ? tripConfig.bookedStayName
+    : (tripConfig?.bookedStayName || `${destinationData?.cityName || 'City'} Stay`);
 
   // Departure Flight State
   const [activeFlightTab, setActiveFlightTab] = useState('ai-recommended'); // 'ai-recommended' | 'custom'
@@ -409,13 +410,36 @@ export default function GoodbyeModePhase({
                     {depAirport || `${destinationData.cityName} Airport`} → {returnAirport}
                   </p>
                 </div>
-                <button
-                  onClick={() => setIsEditingFlight(true)}
-                  className="px-3 py-1.5 rounded-xl bg-white hover:bg-purple-100/70 border border-purple-200 text-purple-800 font-bold text-xs flex items-center gap-1.5 transition-all shadow-2xs cursor-pointer"
-                >
-                  <Edit3 className="w-3.5 h-3.5" />
-                  <span>Change Flight</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      const updated = {
+                        ...tripConfig,
+                        departureFlightConfirmed: false,
+                        departureFlightNumber: '',
+                        departureAirline: ''
+                      };
+                      setIsFlightConfirmed(false);
+                      setIsEditingFlight(true);
+                      setDepFlightNumber('');
+                      setDepAirline('');
+                      if (onSaveTripConfig) onSaveTripConfig(updated);
+                      setFlightSavedToast('Departure flight selection cleared.');
+                      setTimeout(() => setFlightSavedToast(null), 3000);
+                    }}
+                    className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-rose-50 border border-slate-200 text-rose-600 font-bold text-xs flex items-center gap-1 transition-all shadow-2xs cursor-pointer"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Clear</span>
+                  </button>
+                  <button
+                    onClick={() => setIsEditingFlight(true)}
+                    className="px-3 py-1.5 rounded-xl bg-white hover:bg-purple-100/70 border border-purple-200 text-purple-800 font-bold text-xs flex items-center gap-1.5 transition-all shadow-2xs cursor-pointer"
+                  >
+                    <Edit3 className="w-3.5 h-3.5" />
+                    <span>Change Flight</span>
+                  </button>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2 border-t border-purple-200/60 text-xs">
@@ -601,13 +625,26 @@ export default function GoodbyeModePhase({
                           </div>
                         </div>
 
-                        <button
-                          onClick={() => handleSelectAiFlight(flight)}
-                          className="px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-black text-xs transition-colors shadow-2xs flex items-center gap-1.5 cursor-pointer"
-                        >
-                          <PlaneTakeoff className="w-3.5 h-3.5" />
-                          <span>Select & Confirm Flight</span>
-                        </button>
+                        <div className="flex items-center gap-2">
+                          {flight.googleFlightsUrl && (
+                            <a
+                              href={flight.googleFlightsUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-3 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs border border-blue-200 transition-colors flex items-center gap-1 cursor-pointer"
+                            >
+                              <ExternalLink className="w-3.5 h-3.5" />
+                              <span>Live Search ↗</span>
+                            </a>
+                          )}
+                          <button
+                            onClick={() => handleSelectAiFlight(flight)}
+                            className="px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-black text-xs transition-colors shadow-2xs flex items-center gap-1.5 cursor-pointer"
+                          >
+                            <PlaneTakeoff className="w-3.5 h-3.5" />
+                            <span>Select & Confirm Flight</span>
+                          </button>
+                        </div>
                       </div>
 
                       {/* Safety Highlights */}
